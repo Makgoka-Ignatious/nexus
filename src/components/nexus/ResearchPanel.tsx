@@ -1,7 +1,9 @@
-import { useEffect, useRef, useState } from "react";
-import { Sparkle, Lightbulb, ListChecks, Pencil, Check } from "lucide-react";
-import { generateResearch, type ResearchResult } from "@/lib/nexus/mock-research";
+import { useState } from "react";
+import { Sparkle, Lightbulb, ListChecks, Pencil, Check, AlertTriangle } from "lucide-react";
+import type { ResearchResult } from "@/lib/nexus/mock-research";
+import { analyzeResearch } from "@/lib/nexus/ai.functions";
 import { NodePathAnimation } from "./NodePathAnimation";
+import { Markdown } from "./ChatPanel";
 
 type Phase = "idle" | "loading" | "ready";
 
@@ -9,18 +11,20 @@ export function ResearchPanel() {
   const [input, setInput] = useState("");
   const [phase, setPhase] = useState<Phase>("idle");
   const [result, setResult] = useState<ResearchResult | null>(null);
-  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => () => clearTimeout(timer.current), []);
-
-  const run = () => {
+  const run = async () => {
     if (!input.trim() || phase === "loading") return;
     setPhase("loading");
-    const generated = generateResearch(input);
-    timer.current = setTimeout(() => {
+    setError(null);
+    try {
+      const generated = await analyzeResearch({ data: { input } });
       setResult(generated);
       setPhase("ready");
-    }, 1800);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Analysis failed. Try again.");
+      setPhase(result ? "ready" : "idle");
+    }
   };
 
   return (
