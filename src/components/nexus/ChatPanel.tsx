@@ -1,19 +1,17 @@
 import { useEffect, useRef, useState } from "react";
-import { SendHorizonal, Trash2, Bot, User } from "lucide-react";
-import {
-  generateChatReply,
-  SUGGESTED_PROMPTS,
-  type ChatMessage,
-} from "@/lib/nexus/mock-chat";
+import { SendHorizonal, Trash2, Bot, User, AlertTriangle } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import { SUGGESTED_PROMPTS, type ChatMessage } from "@/lib/nexus/mock-chat";
+import { chatReply } from "@/lib/nexus/ai.functions";
 
-const CHARS_PER_SECOND = 30;
+const CHARS_PER_SECOND = 220;
 
 const INITIAL: ChatMessage[] = [
   {
     id: "welcome",
     role: "assistant",
     content:
-      "Nexus online. Ask me about the hub, or tell me what you're working on and I'll route you to the right tool.",
+      "Nexus online. Ask me anything — I read what you actually write, so give me as much detail as you like.",
   },
 ];
 
@@ -22,6 +20,7 @@ export function ChatPanel() {
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState<string | null>(null);
   const [thinking, setThinking] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
@@ -34,43 +33,51 @@ export function ChatPanel() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, streaming, thinking]);
 
-  const send = () => {
+  const typeOut = (reply: string) => {
+    setStreaming("");
+    let index = 0;
+    const chunk = Math.max(1, Math.round(CHARS_PER_SECOND / 30));
+    const step = () => {
+      index += chunk;
+      setStreaming(reply.slice(0, index));
+      if (index < reply.length) {
+        timers.current.push(setTimeout(step, 1000 / 30));
+      } else {
+        setStreaming(null);
+        setMessages((prev) => [
+          ...prev,
+          { id: `a-${Date.now()}`, role: "assistant", content: reply },
+        ]);
+      }
+    };
+    step();
+  };
+
+  const send = async () => {
     const value = input.trim();
     if (!value || thinking || streaming !== null) return;
 
-    const userMessage: ChatMessage = {
-      id: `u-${Date.now()}`,
-      role: "user",
-      content: value,
-    };
+    const userMessage: ChatMessage = { id: `u-${Date.now()}`, role: "user", content: value };
     const nextHistory = [...messages, userMessage];
     setMessages(nextHistory);
     setInput("");
+    setError(null);
     setThinking(true);
 
-    const reply = generateChatReply(value, nextHistory);
-
-    timers.current.push(
-      setTimeout(() => {
-        setThinking(false);
-        setStreaming("");
-        let index = 0;
-        const step = () => {
-          index += 1;
-          setStreaming(reply.slice(0, index));
-          if (index < reply.length) {
-            timers.current.push(setTimeout(step, 1000 / CHARS_PER_SECOND));
-          } else {
-            setStreaming(null);
-            setMessages((prev) => [
-              ...prev,
-              { id: `a-${Date.now()}`, role: "assistant", content: reply },
-            ]);
-          }
-        };
-        step();
-      }, 550),
-    );
+    try {
+      const result = await chatReply({
+        data: {
+          messages: nextHistory
+            .filter((m) => m.id !== "welcome")
+            .map(({ role, content }) => ({ role, content })),
+        },
+      });
+      setThinking(false);
+      typeOut(result.content || "I didn't get a response that time — try again.");
+    } catch (err) {
+      setThinking(false);
+      setError(err instanceof Error ? err.message : "Something went wrong.");
+    }
   };
 
   const clear = () => {
@@ -78,6 +85,7 @@ export function ChatPanel() {
     timers.current = [];
     setStreaming(null);
     setThinking(false);
+    setError(null);
     setMessages(INITIAL);
   };
 
@@ -89,7 +97,7 @@ export function ChatPanel() {
         <div>
           <h1 className="text-lg">AI Chat</h1>
           <p className="text-[13px] text-muted-foreground">
-            Simulated assistant — responses are generated locally.
+            Live AI — it reads and reasons over whatever you send.
           </p>
         </div>
         <button
@@ -110,11 +118,18 @@ export function ChatPanel() {
         {thinking && (
           <div className="flex items-center gap-3 text-sm text-muted-foreground">
             <span className="animate-dash-spin inline-block size-4 rounded-full border border-dashed border-primary" />
-            Composing a response
+            Thinking it through
           </div>
         )}
 
         {streaming !== null && <Bubble role="assistant" content={streaming} caret />}
+
+        {error && (
+          <p className="flex items-start gap-2 rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-[13px] text-destructive">
+            <AlertTriangle className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
+            {error}
+          </p>
+        )}
       </div>
 
       {messages.length <= 1 && !busy && (
@@ -145,7 +160,7 @@ export function ChatPanel() {
             onKeyDown={(event) => {
               if (event.key === "Enter" && !event.shiftKey) {
                 event.preventDefault();
-                send();
+                void send();
               }
             }}
             placeholder="Ask anything — Enter to send, Shift+Enter for a new line"
@@ -153,7 +168,7 @@ export function ChatPanel() {
           />
           <button
             type="button"
-            onClick={send}
+            onClick={() => void send()}
             disabled={busy || !input.trim()}
             className="press inline-flex h-[56px] items-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-40"
           >
@@ -190,17 +205,25 @@ function Bubble({
       </span>
       <div
         aria-live={caret ? "polite" : undefined}
-        className={`max-w-[min(46rem,85%)] whitespace-pre-wrap rounded-md px-4 py-3 text-[15px] leading-relaxed ${
+        className={`max-w-[min(46rem,85%)] rounded-md px-4 py-3 text-[15px] leading-relaxed ${
           isUser
-            ? "bg-primary text-primary-foreground"
+            ? "whitespace-pre-wrap bg-primary text-primary-foreground"
             : "border border-border bg-card text-foreground"
         }`}
       >
-        {content}
+        {isUser ? content : <Markdown content={content} />}
         {caret && (
           <span className="animate-caret ml-0.5 inline-block h-[1.05em] w-[2px] translate-y-[3px] bg-primary" />
         )}
       </div>
+    </div>
+  );
+}
+
+export function Markdown({ content }: { content: string }) {
+  return (
+    <div className="space-y-3 [&_a]:text-primary [&_a]:underline [&_code]:rounded [&_code]:bg-muted [&_code]:px-1 [&_code]:py-0.5 [&_code]:text-[13px] [&_h1]:text-lg [&_h2]:text-base [&_h3]:text-[15px] [&_li]:leading-relaxed [&_ol]:list-decimal [&_ol]:space-y-1.5 [&_ol]:pl-5 [&_p]:leading-relaxed [&_strong]:font-semibold [&_ul]:list-disc [&_ul]:space-y-1.5 [&_ul]:pl-5">
+      <ReactMarkdown>{content}</ReactMarkdown>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { SECTIONS, type SectionId } from "./sections";
 
 interface SidebarProps {
@@ -5,25 +6,38 @@ interface SidebarProps {
   onSelect: (id: SectionId) => void;
 }
 
-export function Sidebar({ active, onSelect }: SidebarProps) {
+interface DesktopSidebarProps extends SidebarProps {
+  collapsed: boolean;
+  onToggle: () => void;
+}
+
+export function Sidebar({ active, onSelect, collapsed, onToggle }: DesktopSidebarProps) {
   return (
     <nav
       aria-label="Primary"
-      className="fixed inset-y-0 left-0 hidden w-[260px] flex-col border-r border-sidebar-border bg-sidebar md:flex"
+      className={`fixed inset-y-0 left-0 z-30 hidden flex-col border-r border-sidebar-border bg-sidebar transition-[width] duration-300 md:flex ${
+        collapsed ? "w-[72px]" : "w-[260px]"
+      }`}
     >
-      <div className="flex h-20 items-center gap-3 border-b border-sidebar-border px-6">
-        <span className="grid size-8 place-items-center rounded-md bg-sidebar-active text-[13px] font-semibold tracking-tight text-sidebar-active-foreground">
+      <div
+        className={`flex h-20 items-center gap-3 border-b border-sidebar-border ${
+          collapsed ? "justify-center px-3" : "px-6"
+        }`}
+      >
+        <span className="grid size-8 shrink-0 place-items-center rounded-md bg-sidebar-active text-[13px] font-semibold tracking-tight text-sidebar-active-foreground">
           N
         </span>
-        <div>
-          <p className="text-[15px] font-semibold tracking-[0.18em] text-foreground">NEXUS</p>
-          <p className="text-[11px] leading-tight text-muted-foreground">
-            Command your comms
-          </p>
-        </div>
+        {!collapsed && (
+          <div className="min-w-0">
+            <p className="text-[15px] font-semibold tracking-[0.18em] text-foreground">NEXUS</p>
+            <p className="text-[11px] leading-tight text-muted-foreground">
+              Command your comms
+            </p>
+          </div>
+        )}
       </div>
 
-      <ul className="flex flex-col gap-1 p-4">
+      <ul className={`flex flex-col gap-1 ${collapsed ? "p-3" : "p-4"}`}>
         {SECTIONS.map((section) => {
           const isActive = section.id === active;
           const Icon = section.icon;
@@ -33,36 +47,61 @@ export function Sidebar({ active, onSelect }: SidebarProps) {
                 type="button"
                 onClick={() => onSelect(section.id)}
                 aria-current={isActive ? "page" : undefined}
-                className={`press flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-left text-sm font-medium ${
+                title={collapsed ? section.label : undefined}
+                className={`press flex w-full items-center gap-3 rounded-md py-2.5 text-left text-sm font-medium ${
+                  collapsed ? "justify-center px-0" : "px-3"
+                } ${
                   isActive
                     ? "bg-sidebar-active text-sidebar-active-foreground"
                     : "text-sidebar-foreground hover:bg-card hover:text-foreground"
                 }`}
               >
                 <Icon className="size-4 shrink-0" aria-hidden="true" />
-                <span className="flex-1">{section.label}</span>
-                <span
-                  aria-hidden="true"
-                  className={`size-1.5 rounded-full ${
-                    isActive ? "bg-signal" : "bg-border"
-                  }`}
-                />
+                {!collapsed && (
+                  <>
+                    <span className="flex-1">{section.label}</span>
+                    <span
+                      aria-hidden="true"
+                      className={`size-1.5 rounded-full ${isActive ? "bg-signal" : "bg-border"}`}
+                    />
+                  </>
+                )}
               </button>
             </li>
           );
         })}
       </ul>
 
-      <div className="mt-auto p-4">
-        <div className="panel p-4">
-          <div className="flex items-center gap-2">
-            <span className="size-1.5 rounded-full bg-signal" aria-hidden="true" />
-            <p className="text-[13px] font-semibold text-foreground">Session only</p>
+      <div className={`mt-auto ${collapsed ? "p-3" : "p-4"}`}>
+        {!collapsed && (
+          <div className="panel mb-3 p-4">
+            <div className="flex items-center gap-2">
+              <span className="size-1.5 rounded-full bg-signal" aria-hidden="true" />
+              <p className="text-[13px] font-semibold text-foreground">Session only</p>
+            </div>
+            <p className="mt-1 text-[12px] leading-snug text-muted-foreground">
+              No account, no database. Everything clears when you close the tab.
+            </p>
           </div>
-          <p className="mt-1 text-[12px] leading-snug text-muted-foreground">
-            No account, no database. Everything clears when you close the tab.
-          </p>
-        </div>
+        )}
+
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-expanded={!collapsed}
+          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          className={`press flex w-full items-center gap-2 rounded-md border border-border py-2 text-[13px] font-medium text-muted-foreground hover:bg-card hover:text-foreground ${
+            collapsed ? "justify-center px-0" : "px-3"
+          }`}
+        >
+          {collapsed ? (
+            <PanelLeftOpen className="size-4" aria-hidden="true" />
+          ) : (
+            <PanelLeftClose className="size-4" aria-hidden="true" />
+          )}
+          {!collapsed && <span>Collapse</span>}
+          <span className="sr-only">{collapsed ? "Expand sidebar" : "Collapse sidebar"}</span>
+        </button>
       </div>
     </nav>
   );

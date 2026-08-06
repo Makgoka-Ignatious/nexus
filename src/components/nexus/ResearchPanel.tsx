@@ -1,7 +1,9 @@
-import { useEffect, useRef, useState } from "react";
-import { Sparkle, Lightbulb, ListChecks, Pencil, Check } from "lucide-react";
-import { generateResearch, type ResearchResult } from "@/lib/nexus/mock-research";
+import { useState } from "react";
+import { Sparkle, Lightbulb, ListChecks, Pencil, Check, AlertTriangle } from "lucide-react";
+import type { ResearchResult } from "@/lib/nexus/mock-research";
+import { analyzeResearch } from "@/lib/nexus/ai.functions";
 import { NodePathAnimation } from "./NodePathAnimation";
+import { Markdown } from "./ChatPanel";
 
 type Phase = "idle" | "loading" | "ready";
 
@@ -9,18 +11,20 @@ export function ResearchPanel() {
   const [input, setInput] = useState("");
   const [phase, setPhase] = useState<Phase>("idle");
   const [result, setResult] = useState<ResearchResult | null>(null);
-  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => () => clearTimeout(timer.current), []);
-
-  const run = () => {
+  const run = async () => {
     if (!input.trim() || phase === "loading") return;
     setPhase("loading");
-    const generated = generateResearch(input);
-    timer.current = setTimeout(() => {
+    setError(null);
+    try {
+      const generated = await analyzeResearch({ data: { input } });
       setResult(generated);
       setPhase("ready");
-    }, 1800);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Analysis failed. Try again.");
+      setPhase(result ? "ready" : "idle");
+    }
   };
 
   return (
@@ -28,7 +32,7 @@ export function ResearchPanel() {
       <section className="panel h-fit p-6">
         <h1 className="text-lg">Research Assistant</h1>
         <p className="mt-1 text-[13px] text-muted-foreground">
-          Paste a topic or a full article. Output is simulated from your input.
+          Paste a topic, a question, notes or a full article — the AI reads it all.
         </p>
 
         <label htmlFor="research-input" className="mt-6 block text-[13px] font-medium">
@@ -62,13 +66,20 @@ export function ResearchPanel() {
 
         <button
           type="button"
-          onClick={run}
+          onClick={() => void run()}
           disabled={!input.trim() || phase === "loading"}
           className="press mt-4 inline-flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-40"
         >
           <Sparkle className="size-4" aria-hidden="true" />
-          {phase === "loading" ? "Generating…" : "Generate Summary & Insights"}
+          {phase === "loading" ? "Analysing…" : "Generate Summary & Insights"}
         </button>
+
+        {error && (
+          <p className="mt-3 flex items-start gap-2 rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-[13px] text-destructive">
+            <AlertTriangle className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
+            {error}
+          </p>
+        )}
       </section>
 
       <section className="panel min-h-[420px] p-6">
@@ -113,7 +124,7 @@ function ResearchOutput({
         </div>
         <span className="inline-flex items-center gap-1.5 rounded-md bg-signal-soft px-2.5 py-1 text-[12px] font-medium text-signal">
           <span className="size-1.5 rounded-full bg-signal" aria-hidden="true" />
-          Generated locally
+          AI generated
         </span>
       </header>
 
@@ -123,10 +134,8 @@ function ResearchOutput({
         value={result.summary}
         onSave={(value) => onChange({ ...result, summary: value })}
         render={(value) => (
-          <div className="space-y-4 text-[15px] leading-relaxed text-muted-foreground">
-            {value.split("\n\n").map((paragraph, i) => (
-              <p key={i}>{paragraph}</p>
-            ))}
+          <div className="text-[15px] leading-relaxed text-muted-foreground">
+            <Markdown content={value} />
           </div>
         )}
       />
