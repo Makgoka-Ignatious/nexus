@@ -30,17 +30,23 @@ export const Route = createFileRoute("/")({
 function NexusApp() {
   const [active, setActive] = useState<SectionId>("dashboard");
   const [bannerVisible, setBannerVisible] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
 
   const section = SECTIONS.find((s) => s.id === active);
 
   return (
     <div className="min-h-screen">
       <GridBackground />
-      <Sidebar active={active} onSelect={setActive} />
+      <Sidebar
+        active={active}
+        onSelect={setActive}
+        collapsed={collapsed}
+        onToggle={() => setCollapsed((prev) => !prev)}
+      />
       <MobileTabBar active={active} onSelect={setActive} />
 
       <main
-        className={`px-4 pt-8 md:pl-[292px] md:pr-8 ${bannerVisible ? "pb-32 md:pb-20" : "pb-28 md:pb-12"}`}
+        className={`px-4 pt-8 transition-[padding] duration-300 md:pr-8 ${collapsed ? "md:pl-[104px]" : "md:pl-[292px]"} ${bannerVisible ? "pb-32 md:pb-20" : "pb-28 md:pb-12"}`}
       >
         <div className="mx-auto max-w-[1140px]">
           <p className="mb-6 text-[12px] font-medium tracking-[0.16em] text-muted-foreground md:hidden">
