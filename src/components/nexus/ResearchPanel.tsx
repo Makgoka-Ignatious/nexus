@@ -66,13 +66,20 @@ export function ResearchPanel() {
 
         <button
           type="button"
-          onClick={run}
+          onClick={() => void run()}
           disabled={!input.trim() || phase === "loading"}
           className="press mt-4 inline-flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-40"
         >
           <Sparkle className="size-4" aria-hidden="true" />
-          {phase === "loading" ? "Generating…" : "Generate Summary & Insights"}
+          {phase === "loading" ? "Analysing…" : "Generate Summary & Insights"}
         </button>
+
+        {error && (
+          <p className="mt-3 flex items-start gap-2 rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-[13px] text-destructive">
+            <AlertTriangle className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
+            {error}
+          </p>
+        )}
       </section>
 
       <section className="panel min-h-[420px] p-6">
