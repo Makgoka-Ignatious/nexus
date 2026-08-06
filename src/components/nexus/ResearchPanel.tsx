@@ -134,10 +134,8 @@ function ResearchOutput({
         value={result.summary}
         onSave={(value) => onChange({ ...result, summary: value })}
         render={(value) => (
-          <div className="space-y-4 text-[15px] leading-relaxed text-muted-foreground">
-            {value.split("\n\n").map((paragraph, i) => (
-              <p key={i}>{paragraph}</p>
-            ))}
+          <div className="text-[15px] leading-relaxed text-muted-foreground">
+            <Markdown content={value} />
           </div>
         )}
       />
