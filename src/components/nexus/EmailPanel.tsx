@@ -1,51 +1,47 @@
-import { useEffect, useRef, useState } from "react";
-import { Copy, Check, RefreshCw, Pencil, Mail, Info } from "lucide-react";
-import {
-  generateEmail,
-  suggestSubject,
-  TONES,
-  type EmailTone,
-} from "@/lib/nexus/mock-email";
+import { useState } from "react";
+import { Copy, Check, RefreshCw, Pencil, Mail, Info, AlertTriangle } from "lucide-react";
+import { TONES, type EmailTone } from "@/lib/nexus/mock-email";
+import { draftEmail } from "@/lib/nexus/ai.functions";
 import { NodePathAnimation } from "./NodePathAnimation";
 
 type Phase = "idle" | "loading" | "ready";
 
 export function EmailPanel() {
   const [to, setTo] = useState("");
+  const [recipient, setRecipient] = useState("");
   const [subject, setSubject] = useState("");
-  const [subjectTouched, setSubjectTouched] = useState(false);
   const [context, setContext] = useState("");
   const [tone, setTone] = useState<EmailTone>("formal");
   const [phase, setPhase] = useState<Phase>("idle");
   const [body, setBody] = useState("");
+  const [finalSubject, setFinalSubject] = useState("");
   const [editing, setEditing] = useState(false);
   const [copied, setCopied] = useState(false);
-  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => () => clearTimeout(timer.current), []);
-
-  // Auto-suggest the subject from context/tone until the user edits it.
-  useEffect(() => {
-    if (subjectTouched) return;
-    setSubject(suggestSubject(context, tone));
-  }, [context, tone, subjectTouched]);
-
-  const generate = () => {
+  const generate = async () => {
     if (!context.trim() || phase === "loading") return;
     setPhase("loading");
     setEditing(false);
     setCopied(false);
-    const draft = generateEmail({ to: to || "there", subject, context, tone });
-    timer.current = setTimeout(() => {
-      setBody(draft);
+    setError(null);
+    try {
+      const draft = await draftEmail({
+        data: { to, recipient, subject, context, tone },
+      });
+      setFinalSubject(draft.subject);
+      setBody(draft.body);
       setPhase("ready");
-    }, 1700);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Draft failed. Try again.");
+      setPhase(body ? "ready" : "idle");
+    }
   };
 
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(
-        `To: ${to}\nSubject: ${subject}\n\n${body}`,
+        `To: ${to}\nSubject: ${finalSubject}\n\n${body}`,
       );
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -63,7 +59,7 @@ export function EmailPanel() {
         </p>
 
         <div className="mt-6 space-y-4">
-          <Field label="To" htmlFor="email-to">
+          <Field label="Recipient email" htmlFor="email-to">
             <input
               id="email-to"
               type="email"
@@ -74,15 +70,30 @@ export function EmailPanel() {
             />
           </Field>
 
-          <Field label="Subject" htmlFor="email-subject" hint="Auto-suggested, editable">
+          <Field
+            label="Recipient name or role"
+            htmlFor="email-recipient"
+            hint="e.g. Dana Reid, or Head of Operations"
+          >
+            <input
+              id="email-recipient"
+              value={recipient}
+              onChange={(event) => setRecipient(event.target.value)}
+              placeholder="Dana Reid — Head of Operations"
+              className="w-full rounded-md border border-input bg-card px-3 py-2.5 text-[15px] placeholder:text-muted-foreground/70"
+            />
+          </Field>
+
+          <Field
+            label="Subject (optional)"
+            htmlFor="email-subject"
+            hint="Leave blank and the AI will write one"
+          >
             <input
               id="email-subject"
               value={subject}
-              onChange={(event) => {
-                setSubjectTouched(true);
-                setSubject(event.target.value);
-              }}
-              placeholder="Add context below for a suggestion"
+              onChange={(event) => setSubject(event.target.value)}
+              placeholder="Leave empty to auto-generate"
               className="w-full rounded-md border border-input bg-card px-3 py-2.5 text-[15px] placeholder:text-muted-foreground/70"
             />
           </Field>
@@ -115,13 +126,20 @@ export function EmailPanel() {
 
           <button
             type="button"
-            onClick={generate}
+            onClick={() => void generate()}
             disabled={!context.trim() || phase === "loading"}
             className="press inline-flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-40"
           >
             <Mail className="size-4" aria-hidden="true" />
-            {phase === "loading" ? "Generating…" : "Generate Email"}
+            {phase === "loading" ? "Writing…" : "Generate Email"}
           </button>
+
+          {error && (
+            <p className="flex items-start gap-2 rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-[13px] text-destructive">
+              <AlertTriangle className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
+              {error}
+            </p>
+          )}
         </div>
       </section>
 
@@ -146,9 +164,10 @@ export function EmailPanel() {
             <header className="flex flex-wrap items-center gap-3 border-b border-border pb-4">
               <div className="min-w-0 flex-1">
                 <p className="truncate text-[13px] text-muted-foreground">
-                  To: {to || "(no recipient)"}
+                  To: {recipient || to || "(no recipient)"}
+                  {recipient && to ? ` <${to}>` : ""}
                 </p>
-                <h2 className="truncate text-lg">{subject || "(no subject)"}</h2>
+                <h2 className="truncate text-lg">{finalSubject || "(no subject)"}</h2>
               </div>
               <span className="inline-flex items-center gap-1.5 rounded-md bg-signal-soft px-2.5 py-1 text-[12px] font-medium text-signal">
                 {TONES.find((t) => t.value === tone)?.label} tone
@@ -185,7 +204,7 @@ export function EmailPanel() {
               </button>
               <button
                 type="button"
-                onClick={copy}
+                onClick={() => void copy()}
                 className="press inline-flex items-center gap-2 rounded-md border border-border px-3 py-2 text-[13px] font-medium hover:bg-muted"
               >
                 {copied ? <Check className="size-4 text-signal" aria-hidden="true" /> : <Copy className="size-4" aria-hidden="true" />}
@@ -193,7 +212,7 @@ export function EmailPanel() {
               </button>
               <button
                 type="button"
-                onClick={generate}
+                onClick={() => void generate()}
                 className="press inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-[13px] font-medium text-primary-foreground hover:bg-primary-hover"
               >
                 <RefreshCw className="size-4" aria-hidden="true" />
