@@ -44,7 +44,7 @@ export function NodePathAnimation({ label = "Routing through the grid" }: NodePa
             <circle cx={node.x} cy={node.y} r="4" fill="var(--primary)" />
           </g>
         ))}
-        <circle cx={NODES[NODES.length - 1].x} cy={NODES[NODES.length - 1].y} r="5" fill="var(--signal)" />
+        <circle cx={NODES.at(-1)?.x ?? 0} cy={NODES.at(-1)?.y ?? 0} r="5" fill="var(--signal)" />
       </svg>
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <span className="animate-dash-spin inline-block size-4 rounded-full border border-dashed border-primary" />
