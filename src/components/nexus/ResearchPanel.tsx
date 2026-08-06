@@ -32,7 +32,7 @@ export function ResearchPanel() {
       <section className="panel h-fit p-6">
         <h1 className="text-lg">Research Assistant</h1>
         <p className="mt-1 text-[13px] text-muted-foreground">
-          Paste a topic or a full article. Output is simulated from your input.
+          Paste a topic, a question, notes or a full article — the AI reads it all.
         </p>
 
         <label htmlFor="research-input" className="mt-6 block text-[13px] font-medium">
@@ -124,7 +124,7 @@ function ResearchOutput({
         </div>
         <span className="inline-flex items-center gap-1.5 rounded-md bg-signal-soft px-2.5 py-1 text-[12px] font-medium text-signal">
           <span className="size-1.5 rounded-full bg-signal" aria-hidden="true" />
-          Generated locally
+          AI generated
         </span>
       </header>
 
