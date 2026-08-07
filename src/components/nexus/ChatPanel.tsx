@@ -3,6 +3,7 @@ import { SendHorizonal, Trash2, Bot, User, AlertTriangle } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { SUGGESTED_PROMPTS, type ChatMessage } from "@/lib/nexus/mock-chat";
 import { chatReply } from "@/lib/nexus/ai.functions";
+import { bumpAiCalls } from "@/lib/nexus/ai-counter";
 
 const CHARS_PER_SECOND = 220;
 
@@ -65,6 +66,7 @@ export function ChatPanel() {
     setThinking(true);
 
     try {
+      bumpAiCalls();
       const result = await chatReply({
         data: {
           messages: nextHistory
@@ -92,25 +94,27 @@ export function ChatPanel() {
   const busy = thinking || streaming !== null;
 
   return (
-    <div className="panel flex h-[calc(100vh-13rem)] min-h-[520px] flex-col">
-      <header className="flex items-center gap-3 border-b border-border px-6 py-4">
-        <div>
-          <h1 className="text-lg">AI Chat</h1>
-          <p className="text-[13px] text-muted-foreground">
+    <div className="panel flex h-[calc(100svh-15rem)] min-h-[460px] flex-col sm:h-[calc(100vh-13rem)] sm:min-h-[520px]">
+      <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b border-border px-4 py-4 sm:px-6">
+        <div className="min-w-0">
+          <h1 className="truncate text-lg">AI Chat</h1>
+          <p className="truncate text-[13px] text-muted-foreground">
             Live AI — it reads and reasons over whatever you send.
           </p>
         </div>
         <button
           type="button"
           onClick={clear}
-          className="press ml-auto inline-flex items-center gap-2 rounded-md border border-border px-3 py-2 text-[13px] font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+          aria-label="Clear conversation"
+          className="press inline-flex min-h-11 shrink-0 items-center gap-2 rounded-md border border-border px-3 py-2 text-[13px] font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
         >
-          <Trash2 className="size-4" aria-hidden="true" />
-          Clear conversation
+          <Trash2 className="size-4 shrink-0" aria-hidden="true" />
+          <span className="hidden sm:inline">Clear conversation</span>
         </button>
       </header>
 
-      <div ref={scrollRef} className="flex-1 space-y-6 overflow-y-auto px-6 py-6">
+      <div ref={scrollRef} className="flex-1 space-y-6 overflow-y-auto px-4 py-5 sm:px-6 sm:py-6">
+
         {messages.map((message) => (
           <Bubble key={message.id} role={message.role} content={message.content} />
         ))}
@@ -133,13 +137,13 @@ export function ChatPanel() {
       </div>
 
       {messages.length <= 1 && !busy && (
-        <div className="flex flex-wrap gap-2 border-t border-border px-6 py-3">
+        <div className="flex flex-wrap gap-2 border-t border-border px-4 py-3 sm:px-6">
           {SUGGESTED_PROMPTS.map((prompt) => (
             <button
               key={prompt}
               type="button"
               onClick={() => setInput(prompt)}
-              className="press rounded-md border border-border bg-card px-3 py-1.5 text-[13px] text-muted-foreground hover:border-primary hover:text-primary"
+              className="press max-w-full truncate rounded-md border border-border bg-card px-3 py-2 text-[13px] text-muted-foreground hover:border-primary hover:text-primary"
             >
               {prompt}
             </button>
@@ -147,8 +151,8 @@ export function ChatPanel() {
         </div>
       )}
 
-      <div className="border-t border-border p-4">
-        <div className="flex items-end gap-3">
+      <div className="border-t border-border p-3 sm:p-4">
+        <div className="flex items-end gap-2 sm:gap-3">
           <label htmlFor="nexus-chat-input" className="sr-only">
             Message
           </label>
@@ -164,17 +168,19 @@ export function ChatPanel() {
               }
             }}
             placeholder="Ask anything — Enter to send, Shift+Enter for a new line"
-            className="min-h-[56px] flex-1 resize-none rounded-md border border-input bg-card px-3 py-2.5 text-[15px] text-foreground placeholder:text-muted-foreground/70"
+            className="min-h-[56px] min-w-0 flex-1 resize-none rounded-md border border-input bg-card px-3 py-2.5 text-[15px] text-foreground placeholder:text-muted-foreground/70"
           />
           <button
             type="button"
             onClick={() => void send()}
             disabled={busy || !input.trim()}
-            className="press inline-flex h-[56px] items-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-40"
+            aria-label="Send message"
+            className="press inline-flex h-[56px] shrink-0 items-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-40"
           >
-            <SendHorizonal className="size-4" aria-hidden="true" />
-            Send
+            <SendHorizonal className="size-4 shrink-0" aria-hidden="true" />
+            <span className="hidden sm:inline">Send</span>
           </button>
+
         </div>
       </div>
     </div>

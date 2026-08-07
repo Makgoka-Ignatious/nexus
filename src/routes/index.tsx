@@ -7,11 +7,12 @@ import { DashboardHome } from "@/components/nexus/DashboardHome";
 import { ChatPanel } from "@/components/nexus/ChatPanel";
 import { ResearchPanel } from "@/components/nexus/ResearchPanel";
 import { EmailPanel } from "@/components/nexus/EmailPanel";
+import { TopBar } from "@/components/nexus/TopBar";
 import { SECTIONS, type SectionId } from "@/components/nexus/sections";
 
-const TITLE = "Nexus — Command your communication infrastructure";
+const TITLE = "Nexus — Think. Link. Deliver.";
 const DESCRIPTION =
-  "Nexus is an AI workplace productivity hub: chat, research summaries and smart email drafting in one Urban Grid control panel. Session-only, no account, no stored data.";
+  "Nexus is an AI workplace productivity hub: chat, research from text, links or PDFs, and smart email drafting in one Urban Grid control panel. Built for Momentum.";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -46,12 +47,10 @@ function NexusApp() {
       <MobileTabBar active={active} onSelect={setActive} />
 
       <main
-        className={`px-4 pt-8 transition-[padding] duration-300 md:pr-8 ${collapsed ? "md:pl-[104px]" : "md:pl-[292px]"} ${bannerVisible ? "pb-32 md:pb-20" : "pb-28 md:pb-12"}`}
+        className={`px-3 pt-6 transition-[padding] duration-300 sm:px-4 sm:pt-8 md:pr-6 lg:pr-8 ${collapsed ? "md:pl-[96px]" : "md:pl-[284px]"} ${bannerVisible ? "pb-36 md:pb-20" : "pb-32 md:pb-12"}`}
       >
-        <div className="mx-auto max-w-[1140px]">
-          <p className="mb-6 text-[12px] font-medium tracking-[0.16em] text-muted-foreground md:hidden">
-            NEXUS · {section?.label.toUpperCase()}
-          </p>
+        <div className="mx-auto w-full max-w-[1400px]">
+          <TopBar sectionLabel={section?.label ?? "Dashboard"} />
           <div key={active} className="animate-section-in">
             {active === "dashboard" && <DashboardHome onLaunch={setActive} />}
             {active === "chat" && <ChatPanel />}
@@ -65,3 +64,4 @@ function NexusApp() {
     </div>
   );
 }
+

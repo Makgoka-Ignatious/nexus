@@ -6,7 +6,11 @@ import type { EmailTone } from "./mock-email";
 const GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
 const MODEL = "google/gemini-2.5-flash";
 
-type Msg = { role: "system" | "user" | "assistant"; content: string };
+type Part = Record<string, unknown>;
+type Msg = {
+  role: "system" | "user" | "assistant";
+  content: string | Part[];
+};
 
 async function complete(messages: Msg[], jsonMode = false): Promise<string> {
   const key = process.env["LOVABLE_API_KEY"];
@@ -80,19 +84,63 @@ export const chatReply = createServerFn({ method: "POST" })
 
 /* -------------------------------- research -------------------------------- */
 
-const researchSchema = z.object({ input: z.string().min(1).max(20000) });
+const researchSchema = z.object({
+  input: z.string().max(20000).optional().default(""),
+  url: z.string().max(2000).optional().default(""),
+  file: z
+    .object({
+      name: z.string().max(300),
+      mimeType: z.string().max(120),
+      dataUrl: z.string().max(14_000_000),
+    })
+    .optional(),
+});
+
+const RESEARCH_SYSTEM =
+  'You are a rigorous research analyst. Read the user material (a topic, question, notes, a web page or an attached PDF) and produce genuine analysis grounded in what was actually provided. Respond ONLY with JSON of shape {"topic": string, "summary": string, "insights": string[], "recommendations": string[]}. "topic" is a short title (max 10 words). "summary" is 2-3 substantial paragraphs separated by \\n\\n. "insights" has 3-5 specific, non-obvious observations. "recommendations" has 3-5 concrete, actionable next steps. No markdown fences.';
 
 export const analyzeResearch = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => researchSchema.parse(data))
   .handler(async ({ data }): Promise<ResearchResult> => {
+    const parts: Part[] = [];
+    let source = "";
+
+    if (data.file) {
+      if (!data.file.dataUrl.startsWith("data:") || data.file.dataUrl.length < 100)
+        throw new Error("That file could not be read. Try re-uploading it.");
+      parts.push({
+        type: "file",
+        file: { filename: data.file.name, file_data: data.file.dataUrl },
+      });
+      source = `PDF: ${data.file.name}`;
+    }
+
+    if (data.url.trim()) {
+      const { fetchPageText } = await import("./extract.server");
+      const page = await fetchPageText(data.url.trim());
+      parts.push({
+        type: "text",
+        text: `Web page (${page.url})${page.title ? ` — "${page.title}"` : ""}:\n\n${page.text}`,
+      });
+      source = source ? `${source} + ${page.url}` : page.url;
+    }
+
+    if (data.input.trim()) {
+      parts.push({ type: "text", text: data.input.trim() });
+      if (!source) source = "Pasted text";
+    }
+
+    if (parts.length === 0) throw new Error("Provide a topic, a URL or a PDF.");
+
+    parts.push({
+      type: "text",
+      text: "Analyse all of the material above and return the JSON object.",
+    });
+
     const raw = await complete(
       [
-        {
-          role: "system",
-          content:
-            'You are a rigorous research analyst. Read the user material (a topic, question, notes or a full article) and produce genuine analysis grounded in what was actually provided. Respond ONLY with JSON of shape {"topic": string, "summary": string, "insights": string[], "recommendations": string[]}. "topic" is a short title (max 10 words). "summary" is 2-3 substantial paragraphs separated by \\n\\n. "insights" has 3-5 specific, non-obvious observations. "recommendations" has 3-5 concrete, actionable next steps. No markdown fences.',
-        },
-        { role: "user", content: data.input },
+        { role: "system", content: RESEARCH_SYSTEM },
+        { role: "user", content: parts },
       ],
       true,
     );
@@ -103,6 +151,7 @@ export const analyzeResearch = createServerFn({ method: "POST" })
       summary: parsed.summary?.trim() || "",
       insights: (parsed.insights ?? []).filter(Boolean),
       recommendations: (parsed.recommendations ?? []).filter(Boolean),
+      source,
     };
   });
 

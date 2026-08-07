@@ -30,8 +30,8 @@ export function Sidebar({ active, onSelect, collapsed, onToggle }: DesktopSideba
         {!collapsed && (
           <div className="min-w-0">
             <p className="text-[15px] font-semibold tracking-[0.18em] text-foreground">NEXUS</p>
-            <p className="text-[11px] leading-tight text-muted-foreground">
-              Command your comms
+            <p className="truncate text-[11px] leading-tight tracking-[0.12em] text-signal">
+              Think. Link. Deliver.
             </p>
           </div>
         )}
@@ -59,10 +59,10 @@ export function Sidebar({ active, onSelect, collapsed, onToggle }: DesktopSideba
                 <Icon className="size-4 shrink-0" aria-hidden="true" />
                 {!collapsed && (
                   <>
-                    <span className="flex-1">{section.label}</span>
+                    <span className="min-w-0 flex-1 truncate">{section.label}</span>
                     <span
                       aria-hidden="true"
-                      className={`size-1.5 rounded-full ${isActive ? "bg-signal" : "bg-border"}`}
+                      className={`size-1.5 shrink-0 rounded-full ${isActive ? "bg-signal" : "bg-border"}`}
                     />
                   </>
                 )}
@@ -76,7 +76,7 @@ export function Sidebar({ active, onSelect, collapsed, onToggle }: DesktopSideba
         {!collapsed && (
           <div className="panel mb-3 p-4">
             <div className="flex items-center gap-2">
-              <span className="size-1.5 rounded-full bg-signal" aria-hidden="true" />
+              <span className="size-1.5 shrink-0 rounded-full bg-signal" aria-hidden="true" />
               <p className="text-[13px] font-semibold text-foreground">Session only</p>
             </div>
             <p className="mt-1 text-[12px] leading-snug text-muted-foreground">
@@ -90,7 +90,7 @@ export function Sidebar({ active, onSelect, collapsed, onToggle }: DesktopSideba
           onClick={onToggle}
           aria-expanded={!collapsed}
           title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          className={`press flex w-full items-center gap-2 rounded-md border border-border py-2 text-[13px] font-medium text-muted-foreground hover:bg-card hover:text-foreground ${
+          className={`press flex w-full items-center gap-2 rounded-md border border-border py-2.5 text-[13px] font-medium text-muted-foreground hover:bg-card hover:text-foreground ${
             collapsed ? "justify-center px-0" : "px-3"
           }`}
         >
@@ -111,24 +111,24 @@ export function MobileTabBar({ active, onSelect }: SidebarProps) {
   return (
     <nav
       aria-label="Primary"
-      className="fixed inset-x-0 bottom-10 z-30 border-t border-border bg-sidebar md:hidden"
+      className="fixed inset-x-0 bottom-10 z-30 border-t border-border bg-sidebar pb-[env(safe-area-inset-bottom)] md:hidden"
     >
       <ul className="grid grid-cols-4">
         {SECTIONS.map((section) => {
           const isActive = section.id === active;
           const Icon = section.icon;
           return (
-            <li key={section.id}>
+            <li key={section.id} className="min-w-0">
               <button
                 type="button"
                 onClick={() => onSelect(section.id)}
                 aria-current={isActive ? "page" : undefined}
-                className={`press flex w-full flex-col items-center gap-1 py-2.5 text-[11px] font-medium ${
+                className={`press flex min-h-14 w-full flex-col items-center justify-center gap-0.5 px-1 py-2 text-[11px] font-medium ${
                   isActive ? "text-primary" : "text-muted-foreground"
                 }`}
               >
-                <Icon className="size-5" aria-hidden="true" />
-                {section.label}
+                <Icon className="size-5 shrink-0" aria-hidden="true" />
+                <span className="w-full truncate text-center">{section.label}</span>
                 <span
                   aria-hidden="true"
                   className={`size-1 rounded-full ${isActive ? "bg-signal" : "bg-transparent"}`}
