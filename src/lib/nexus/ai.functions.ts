@@ -6,7 +6,11 @@ import type { EmailTone } from "./mock-email";
 const GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
 const MODEL = "google/gemini-2.5-flash";
 
-type Msg = { role: "system" | "user" | "assistant"; content: string };
+type Part = Record<string, unknown>;
+type Msg = {
+  role: "system" | "user" | "assistant";
+  content: string | Part[];
+};
 
 async function complete(messages: Msg[], jsonMode = false): Promise<string> {
   const key = process.env["LOVABLE_API_KEY"];
