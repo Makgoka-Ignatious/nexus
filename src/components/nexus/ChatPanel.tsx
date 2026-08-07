@@ -3,6 +3,7 @@ import { SendHorizonal, Trash2, Bot, User, AlertTriangle } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { SUGGESTED_PROMPTS, type ChatMessage } from "@/lib/nexus/mock-chat";
 import { chatReply } from "@/lib/nexus/ai.functions";
+import { bumpAiCalls } from "@/lib/nexus/ai-counter";
 
 const CHARS_PER_SECOND = 220;
 
