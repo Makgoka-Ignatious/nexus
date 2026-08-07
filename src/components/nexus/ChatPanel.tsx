@@ -137,13 +137,13 @@ export function ChatPanel() {
       </div>
 
       {messages.length <= 1 && !busy && (
-        <div className="flex flex-wrap gap-2 border-t border-border px-6 py-3">
+        <div className="flex flex-wrap gap-2 border-t border-border px-4 py-3 sm:px-6">
           {SUGGESTED_PROMPTS.map((prompt) => (
             <button
               key={prompt}
               type="button"
               onClick={() => setInput(prompt)}
-              className="press rounded-md border border-border bg-card px-3 py-1.5 text-[13px] text-muted-foreground hover:border-primary hover:text-primary"
+              className="press max-w-full truncate rounded-md border border-border bg-card px-3 py-2 text-[13px] text-muted-foreground hover:border-primary hover:text-primary"
             >
               {prompt}
             </button>
@@ -151,8 +151,8 @@ export function ChatPanel() {
         </div>
       )}
 
-      <div className="border-t border-border p-4">
-        <div className="flex items-end gap-3">
+      <div className="border-t border-border p-3 sm:p-4">
+        <div className="flex items-end gap-2 sm:gap-3">
           <label htmlFor="nexus-chat-input" className="sr-only">
             Message
           </label>
@@ -168,17 +168,19 @@ export function ChatPanel() {
               }
             }}
             placeholder="Ask anything — Enter to send, Shift+Enter for a new line"
-            className="min-h-[56px] flex-1 resize-none rounded-md border border-input bg-card px-3 py-2.5 text-[15px] text-foreground placeholder:text-muted-foreground/70"
+            className="min-h-[56px] min-w-0 flex-1 resize-none rounded-md border border-input bg-card px-3 py-2.5 text-[15px] text-foreground placeholder:text-muted-foreground/70"
           />
           <button
             type="button"
             onClick={() => void send()}
             disabled={busy || !input.trim()}
-            className="press inline-flex h-[56px] items-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-40"
+            aria-label="Send message"
+            className="press inline-flex h-[56px] shrink-0 items-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-40"
           >
-            <SendHorizonal className="size-4" aria-hidden="true" />
-            Send
+            <SendHorizonal className="size-4 shrink-0" aria-hidden="true" />
+            <span className="hidden sm:inline">Send</span>
           </button>
+
         </div>
       </div>
     </div>
