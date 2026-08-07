@@ -65,6 +65,7 @@ export function ChatPanel() {
     setThinking(true);
 
     try {
+      bumpAiCalls();
       const result = await chatReply({
         data: {
           messages: nextHistory
