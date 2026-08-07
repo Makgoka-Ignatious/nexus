@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Copy, Check, RefreshCw, Pencil, Mail, Info, AlertTriangle } from "lucide-react";
 import { TONES, type EmailTone } from "@/lib/nexus/mock-email";
 import { draftEmail } from "@/lib/nexus/ai.functions";
+import { bumpAiCalls } from "@/lib/nexus/ai-counter";
 import { NodePathAnimation } from "./NodePathAnimation";
 
 type Phase = "idle" | "loading" | "ready";
@@ -26,6 +27,7 @@ export function EmailPanel() {
     setCopied(false);
     setError(null);
     try {
+      bumpAiCalls();
       const draft = await draftEmail({
         data: { to, recipient, subject, context, tone },
       });
@@ -51,8 +53,8 @@ export function EmailPanel() {
   };
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)]">
-      <section className="panel h-fit p-6">
+    <div className="grid gap-4 sm:gap-6 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)]">
+      <section className="panel h-fit min-w-0 p-4 sm:p-6">
         <h1 className="text-lg">Smart Email Generator</h1>
         <p className="mt-1 text-[13px] text-muted-foreground">
           Nothing is sent — this composes a draft you can copy out.
@@ -128,7 +130,7 @@ export function EmailPanel() {
             type="button"
             onClick={() => void generate()}
             disabled={!context.trim() || phase === "loading"}
-            className="press inline-flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-40"
+            className="press inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-40"
           >
             <Mail className="size-4" aria-hidden="true" />
             {phase === "loading" ? "Writing…" : "Generate Email"}
@@ -143,7 +145,7 @@ export function EmailPanel() {
         </div>
       </section>
 
-      <section className="panel min-h-[420px] p-6">
+      <section className="panel min-h-[420px] min-w-0 p-4 sm:p-6">
         {phase === "idle" && (
           <div className="flex h-full min-h-[360px] flex-col items-center justify-center gap-4 text-center">
             <div className="grid-lines size-24 rounded-md border border-border opacity-60" aria-hidden="true" />
@@ -161,13 +163,13 @@ export function EmailPanel() {
 
         {phase === "ready" && (
           <div className="animate-section-in space-y-5">
-            <header className="flex flex-wrap items-center gap-3 border-b border-border pb-4">
+            <header className="flex flex-wrap items-start gap-3 border-b border-border pb-4">
               <div className="min-w-0 flex-1">
-                <p className="truncate text-[13px] text-muted-foreground">
+                <p className="break-all text-[13px] text-muted-foreground">
                   To: {recipient || to || "(no recipient)"}
                   {recipient && to ? ` <${to}>` : ""}
                 </p>
-                <h2 className="truncate text-lg">{finalSubject || "(no subject)"}</h2>
+                <h2 className="break-words text-lg">{finalSubject || "(no subject)"}</h2>
               </div>
               <span className="inline-flex items-center gap-1.5 rounded-md bg-signal-soft px-2.5 py-1 text-[12px] font-medium text-signal">
                 {TONES.find((t) => t.value === tone)?.label} tone
@@ -183,7 +185,7 @@ export function EmailPanel() {
                 className="w-full resize-y rounded-md border border-input bg-card px-4 py-3 text-[15px] leading-relaxed"
               />
             ) : (
-              <article className="whitespace-pre-wrap rounded-md border border-border bg-accent/50 px-5 py-4 text-[15px] leading-relaxed text-foreground">
+              <article className="whitespace-pre-wrap break-words rounded-md border border-border bg-accent/50 px-4 py-4 sm:px-5 text-[15px] leading-relaxed text-foreground">
                 {body}
               </article>
             )}
@@ -197,7 +199,7 @@ export function EmailPanel() {
               <button
                 type="button"
                 onClick={() => setEditing((prev) => !prev)}
-                className="press inline-flex items-center gap-2 rounded-md border border-border px-3 py-2 text-[13px] font-medium hover:bg-muted"
+                className="press inline-flex items-center gap-2 min-h-11 rounded-md border border-border px-3 py-2 text-[13px] font-medium hover:bg-muted"
               >
                 {editing ? <Check className="size-4" aria-hidden="true" /> : <Pencil className="size-4" aria-hidden="true" />}
                 {editing ? "Done editing" : "Edit"}
@@ -205,7 +207,7 @@ export function EmailPanel() {
               <button
                 type="button"
                 onClick={() => void copy()}
-                className="press inline-flex items-center gap-2 rounded-md border border-border px-3 py-2 text-[13px] font-medium hover:bg-muted"
+                className="press inline-flex items-center gap-2 min-h-11 rounded-md border border-border px-3 py-2 text-[13px] font-medium hover:bg-muted"
               >
                 {copied ? <Check className="size-4 text-signal" aria-hidden="true" /> : <Copy className="size-4" aria-hidden="true" />}
                 {copied ? "Copied" : "Copy to clipboard"}
@@ -213,7 +215,7 @@ export function EmailPanel() {
               <button
                 type="button"
                 onClick={() => void generate()}
-                className="press inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-[13px] font-medium text-primary-foreground hover:bg-primary-hover"
+                className="press inline-flex items-center gap-2 min-h-11 rounded-md bg-primary px-3 py-2 text-[13px] font-medium text-primary-foreground hover:bg-primary-hover"
               >
                 <RefreshCw className="size-4" aria-hidden="true" />
                 Regenerate
