@@ -3,7 +3,9 @@ export interface ResearchResult {
   summary: string;
   insights: string[];
   recommendations: string[];
+  source?: string;
 }
+
 
 const STOP_WORDS = new Set([
   "the","and","for","with","that","this","from","have","has","are","was","were","will",
