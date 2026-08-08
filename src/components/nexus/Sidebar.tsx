@@ -1,4 +1,5 @@
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import logoAsset from "@/assets/nexus-logo.png.asset.json";
 import { SECTIONS, type SectionId } from "./sections";
 
 interface SidebarProps {
@@ -24,9 +25,11 @@ export function Sidebar({ active, onSelect, collapsed, onToggle }: DesktopSideba
           collapsed ? "justify-center px-3" : "px-6"
         }`}
       >
-        <span className="grid size-8 shrink-0 place-items-center rounded-md bg-sidebar-active text-[13px] font-semibold tracking-tight text-sidebar-active-foreground">
-          N
-        </span>
+        <img
+          src={logoAsset.url}
+          alt="Nexus logo"
+          className="size-9 shrink-0 object-contain"
+        />
         {!collapsed && (
           <div className="min-w-0">
             <p className="text-[15px] font-semibold tracking-[0.18em] text-foreground">NEXUS</p>
@@ -107,11 +110,17 @@ export function Sidebar({ active, onSelect, collapsed, onToggle }: DesktopSideba
   );
 }
 
-export function MobileTabBar({ active, onSelect }: SidebarProps) {
+export function MobileTabBar({
+  active,
+  onSelect,
+  offset,
+}: SidebarProps & { offset: boolean }) {
   return (
     <nav
       aria-label="Primary"
-      className="fixed inset-x-0 bottom-10 z-30 border-t border-border bg-sidebar pb-[env(safe-area-inset-bottom)] md:hidden"
+      className={`fixed inset-x-0 z-30 border-t border-border bg-sidebar pb-[env(safe-area-inset-bottom)] transition-[bottom] duration-200 md:hidden ${
+        offset ? "bottom-10" : "bottom-0"
+      }`}
     >
       <ul className="grid grid-cols-4">
         {SECTIONS.map((section) => {

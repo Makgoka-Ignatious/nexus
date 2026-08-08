@@ -4,6 +4,7 @@ import ReactMarkdown from "react-markdown";
 import { SUGGESTED_PROMPTS, type ChatMessage } from "@/lib/nexus/mock-chat";
 import { chatReply } from "@/lib/nexus/ai.functions";
 import { bumpAiCalls } from "@/lib/nexus/ai-counter";
+import { getModel } from "@/lib/nexus/models";
 
 const CHARS_PER_SECOND = 220;
 
@@ -69,6 +70,7 @@ export function ChatPanel() {
       bumpAiCalls();
       const result = await chatReply({
         data: {
+          model: getModel(),
           messages: nextHistory
             .filter((m) => m.id !== "welcome")
             .map(({ role, content }) => ({ role, content })),

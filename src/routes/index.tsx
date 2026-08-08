@@ -44,7 +44,7 @@ function NexusApp() {
         collapsed={collapsed}
         onToggle={() => setCollapsed((prev) => !prev)}
       />
-      <MobileTabBar active={active} onSelect={setActive} />
+      <MobileTabBar active={active} onSelect={setActive} offset={bannerVisible} />
 
       <main
         className={`px-3 pt-6 transition-[padding] duration-300 sm:px-4 sm:pt-8 md:pr-6 lg:pr-8 ${collapsed ? "md:pl-[96px]" : "md:pl-[284px]"} ${bannerVisible ? "pb-36 md:pb-20" : "pb-32 md:pb-12"}`}
