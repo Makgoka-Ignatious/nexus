@@ -16,9 +16,11 @@ export function DashboardHome({ onLaunch }: DashboardHomeProps) {
 
   return (
     <div className="space-y-6 sm:space-y-8">
-      <header className="panel p-5 sm:p-6">
+      <header className="panel grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4 p-5 sm:p-6">
+        <div className="min-w-0">
         <p className="text-[12px] font-medium tracking-[0.18em] text-primary">NEXUS</p>
         <h1 className="mt-2 text-2xl leading-tight sm:text-3xl lg:text-4xl">
+
           Think. Link. Deliver.
         </h1>
         <p className="mt-1.5 text-[13px] font-medium tracking-[0.18em] text-signal">
