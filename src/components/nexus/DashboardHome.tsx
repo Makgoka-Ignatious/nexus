@@ -1,4 +1,6 @@
 import { ArrowRight, ShieldCheck, Wifi, Layers } from "lucide-react";
+import logoAsset from "@/assets/nexus-logo.png.asset.json";
+
 import { SECTIONS, type SectionId } from "./sections";
 
 interface DashboardHomeProps {
