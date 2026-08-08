@@ -15,6 +15,7 @@ import {
 import type { ResearchResult } from "@/lib/nexus/mock-research";
 import { analyzeResearch } from "@/lib/nexus/ai.functions";
 import { bumpAiCalls } from "@/lib/nexus/ai-counter";
+import { getModel } from "@/lib/nexus/models";
 import { NodePathAnimation } from "./NodePathAnimation";
 import { Markdown } from "./ChatPanel";
 
@@ -73,10 +74,11 @@ export function ResearchPanel() {
     setError(null);
     try {
       const payload: {
+        model: string;
         input: string;
         url: string;
         file?: { name: string; mimeType: string; dataUrl: string };
-      } = { input: mode === "text" ? input : "", url: mode === "url" ? url : "" };
+      } = { model: getModel(), input: mode === "text" ? input : "", url: mode === "url" ? url : "" };
 
       if (mode === "pdf" && file) {
         payload.file = {
@@ -110,7 +112,7 @@ export function ResearchPanel() {
       <section className="panel h-fit min-w-0 p-4 sm:p-6">
         <h1 className="text-lg">Research Assistant</h1>
         <p className="mt-1 text-[13px] text-muted-foreground">
-          Paste text, drop in a link, or upload a PDF — the AI reads it all.
+          Paste text, drop in a link or YouTube video, or upload a PDF — the AI reads it all.
         </p>
 
         <div

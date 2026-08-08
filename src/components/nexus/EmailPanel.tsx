@@ -3,6 +3,7 @@ import { Copy, Check, RefreshCw, Pencil, Mail, Info, AlertTriangle } from "lucid
 import { TONES, type EmailTone } from "@/lib/nexus/mock-email";
 import { draftEmail } from "@/lib/nexus/ai.functions";
 import { bumpAiCalls } from "@/lib/nexus/ai-counter";
+import { getModel } from "@/lib/nexus/models";
 import { NodePathAnimation } from "./NodePathAnimation";
 
 type Phase = "idle" | "loading" | "ready";
@@ -29,7 +30,7 @@ export function EmailPanel() {
     try {
       bumpAiCalls();
       const draft = await draftEmail({
-        data: { to, recipient, subject, context, tone },
+        data: { model: getModel(), to, recipient, subject, context, tone },
       });
       setFinalSubject(draft.subject);
       setBody(draft.body);
