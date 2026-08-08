@@ -30,7 +30,14 @@ export function DashboardHome({ onLaunch }: DashboardHomeProps) {
           Three connected tools on one grid — chat, research and email. Nothing is kept
           after you close the tab.
         </p>
+        </div>
+        <img
+          src={logoAsset.url}
+          alt="Nexus logo"
+          className="size-14 shrink-0 object-contain sm:size-20"
+        />
       </header>
+
 
       <section aria-label="Status" className="grid gap-3 sm:grid-cols-3 sm:gap-4">
         {STATS.map((stat) => {
