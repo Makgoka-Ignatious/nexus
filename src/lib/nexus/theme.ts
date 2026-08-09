@@ -16,7 +16,8 @@ function apply() {
 function ensureInit() {
   if (initialised || typeof window === "undefined") return;
   initialised = true;
-  theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  // Nexus always opens in the original "Urban Grid" light theme.
+  theme = "light";
   apply();
 }
 
