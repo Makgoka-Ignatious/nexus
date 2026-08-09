@@ -1,4 +1,4 @@
-/** Session-only light/dark theme store. Follows the OS preference on first load. */
+/** Session-only theme store. Always starts in the default Urban Grid light theme. */
 import { useSyncExternalStore } from "react";
 
 export type Theme = "light" | "dark";
