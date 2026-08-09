@@ -1,4 +1,4 @@
-/** Session-only light/dark theme store. Follows the OS preference on first load. */
+/** Session-only theme store. Always starts in the default Urban Grid light theme. */
 import { useSyncExternalStore } from "react";
 
 export type Theme = "light" | "dark";
@@ -16,7 +16,8 @@ function apply() {
 function ensureInit() {
   if (initialised || typeof window === "undefined") return;
   initialised = true;
-  theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  // Nexus always opens in the original "Urban Grid" light theme.
+  theme = "light";
   apply();
 }
 

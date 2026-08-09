@@ -1,6 +1,8 @@
 # Nexus – AI Workplace Productivity Hub
 
-A modern, responsive web application that brings together three AI-powered tools in a single integrated dashboard: an intelligent chatbot, a research assistant, and a smart email generator. All AI features use a **real language model** (Gemini 2.5 Flash) via a secure API gateway, delivering genuine, context-aware responses.
+**Think. Link. Deliver. — Built for Momentum.**
+
+A modern, responsive single-page web application that brings together three AI-powered tools in one integrated dashboard: an intelligent chatbot, a research assistant, and a smart email generator. All AI features use real language models via a secure gateway — no account, no database, no stored data.
 
 [![GitHub Repo](https://img.shields.io/badge/GitHub-nexus-blue?logo=github)](https://github.com/Makgoka-Ignatious/nexus)
 
@@ -8,91 +10,107 @@ A modern, responsive web application that brings together three AI-powered tools
 
 ## 📌 Project Overview
 
-**Nexus** is a client‑side AI productivity platform that helps professionals automate common workplace tasks. Users can chat with an assistant, summarize articles and get insights, and generate professional emails in multiple tones — all without an account. The design follows a precise "Urban Grid" theme inspired by smart city infrastructure, emphasizing speed, clarity, and authority.
+**Nexus** is a client-side AI productivity platform that helps professionals automate common workplace tasks. Users can chat with an assistant, analyse topics, articles, links, PDFs and YouTube videos, and generate professional emails in multiple tones — all without signing in.
 
-Each tool communicates with **Gemini 2.5 Flash** through Lovable’s AI gateway, producing realistic, dynamic, and context‑sensitive outputs. The application remains fully front‑end and does not store any user data.
+The design follows a precise **"Urban Grid"** theme inspired by smart-city infrastructure and transit maps: a 20px breathing grid background, crisp 1px slate lines, blue routing accents and green signal highlights. The light Urban Grid palette is the default look and every session opens in it; a dark variant of the same grid system is available via the top-bar toggle.
 
 ---
 
-## ✨ Features Implemented
+## ✨ Features
 
 ### 🏠 Dashboard
-- Clean home screen with animated grid background
-- Overview cards for each tool
-- Seamless sidebar navigation with active state indicator
+- Hero with the Nexus logo and the "Think. Link. Deliver." motto
+- Overview cards that launch each tool
+- Animated grid background and active-state sidebar navigation
 
-### 💬 AI Chatbot Interface
-- Real AI‑powered assistant (Gemini 2.5 Flash)
-- Streaming‑style typewriter effect for responses
-- Context‑aware conversations (model references previous messages)
-- Clear conversation button
-- Keyboard‑friendly input (Enter to send)
+### 💬 AI Chatbot
+- Real AI-powered assistant with context-aware, multi-turn conversation
+- Typewriter streaming effect with markdown-formatted replies
+- Clear conversation button, Enter to send / Shift+Enter for newline
 
 ### 📚 AI Research Assistant
-- Input area for topics or pasted articles
-- Structured output: summary, key insights, recommendations  
-  *(generated live by the AI model)*
-- Inline editing of AI‑generated content
-- Node‑and‑path connection animation on completion
+Three input modes, all producing the same structured output:
+- **Text** – paste a topic or full article
+- **Link** – any URL; content is fetched and cleaned server-side, with a reader fallback for sites that block scrapers
+- **PDF** – upload a document (up to 8MB) for direct analysis
+- **YouTube** – paste a video link; title, description and transcript are extracted
+
+Output: summary, key insights, recommendations, plus a note of the source. Every section is inline-editable, and a node-and-path animation plays while the grid "routes" the request.
 
 ### ✉️ Smart Email Generator
-- Form with recipient, subject, context, and tone selector  
-  (Formal / Friendly / Persuasive)
-- AI‑generated email body that authentically reflects chosen tone and context
-- Auto‑suggested subject line (when supported)
-- Copy to clipboard, regenerate, and edit options
+- Recipient email, recipient name or role, context/key points, tone (Formal / Friendly / Persuasive)
+- Optional subject line — left blank, the AI writes one
+- Tone materially changes greeting, phrasing, structure and sign-off
+- Copy to clipboard, regenerate, and edit the draft before use
+
+### 🎛️ Session Controls
+- **Model picker** in the top bar — Gemini Flash (default), Gemini Pro, ChatGPT and ChatGPT Fast; the choice drives chat, research and email
+- **AI request counter** — increments on every AI call, resets on reload (session-only, nothing persisted)
+- **Theme toggle** — Urban Grid light (default) ↔ Urban Grid dark
 
 ### 🎨 Design & UX
-- **Urban Grid theme** – subtle grid background, crisp lines, high contrast
-- Fully responsive: collapsible sidebar (desktop) → bottom tab bar (mobile)
-- Smooth page transitions, button micro‑interactions, loading animations
-- Typography: Inter font, geometric sans‑serif
+- Urban Grid theme with semantic design tokens; no hardcoded colours
+- Fully responsive from 320px to 4K: collapsible sidebar on desktop, bottom tab bar on mobile, 44px touch targets
+- Smooth section crossfades, button micro-interactions, node/path and grid-pulse loading states
+- Typography: Inter
 
 ### 🛡️ Responsible AI
-- Persistent, dismissible disclaimer banner:  
-  *“⚠️ AI-generated content. Verify before use. Nexus does not store your data.”*
-- Per‑email warning: *“This is AI-generated and should be reviewed before sending.”*
-- No user data stored; communication with the AI gateway is stateless
+- Dismissible disclaimer banner: *"AI-generated content. Verify before use. Nexus does not store your data."* — dismissing it drops the mobile tab bar flush to the screen edge
+- Per-email review note before sending
+- No user data stored; AI calls are stateless
 
 ---
 
 ## 🧠 AI Integration
 
-All AI features are powered by **Gemini 2.5 Flash** via the Lovable AI Gateway.
-
-- **Implementation:**  
-  The frontend sends a standard OpenAI‑compatible chat completion request to the gateway. The gateway handles authentication and rate limiting, so no API key is exposed to the browser.
-- **Streaming:** The app parses server‑sent events (SSE) to deliver a typewriter effect in the chatbot and smooth loading states elsewhere.
+AI features run through the Lovable AI Gateway, which handles authentication and rate limiting so **no API key is ever exposed to the browser**. Requests are issued from server functions (`src/lib/nexus/ai.functions.ts`); link, PDF and YouTube extraction happens server-side in `src/lib/nexus/extract.server.ts`.
 
 ---
 
-## 🛠️ Technologies & Tools Used
+## 🛠️ Technologies
 
-| Category        | Technology / Tool                        |
-|-----------------|------------------------------------------|
-| Frontend        | React (with Hooks)                       |
-| Build Tool      | Vite                                     |
-| Styling         | Tailwind CSS                             |
-| Icons           | Lucide React                             |
-| Font            | Inter (Google Fonts)                     |
-| AI Model        | Google Gemini 2.5 Flash (`gemini-2.5-flash`) |
-| AI Gateway      | Lovable AI Gateway (proxy to Gemini API) |
-| Animations      | CSS transitions, custom keyframes        |
-| State Management| React `useState`, `useEffect`            |
-| Version Control | Git & GitHub                             |
+| Category         | Technology / Tool                                   |
+|------------------|-----------------------------------------------------|
+| Framework        | TanStack Start (React 19, file-based routing)       |
+| Build Tool       | Vite                                                 |
+| Styling          | Tailwind CSS v4 (`src/styles.css` theme tokens)     |
+| Icons            | Lucide React                                         |
+| Font             | Inter (Google Fonts)                                 |
+| AI Models        | Gemini Flash / Gemini Pro / ChatGPT / ChatGPT Fast  |
+| AI Gateway       | Lovable AI Gateway                                   |
+| Markdown         | react-markdown                                       |
+| Animations       | CSS transitions and custom keyframes                 |
+| State Management | React hooks + `useSyncExternalStore` session stores  |
+| Version Control  | Git & GitHub                                         |
 
 ---
 
-## 🚀 Setup Instructions
+## 🚀 Setup
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/Makgoka-Ignatious/nexus.git
-   cd nexus
+```bash
+git clone https://github.com/Makgoka-Ignatious/nexus.git
+cd nexus
+npm install
+npm run dev
+```
+
+The app runs at `http://localhost:8080`.
+
+---
+
+## 📁 Structure
+
+```text
+src/
+  components/nexus/   Sidebar, TopBar, GridBackground, Dashboard/Chat/Research/Email panels
+  lib/nexus/          AI server functions, extraction, model + theme + counter stores
+  routes/             __root.tsx (shell, head metadata) and index.tsx (the hub)
+  styles.css          Urban Grid design tokens, utilities and keyframes
+```
 
 ---
 
 ## 👤 Author
 
-**Makgoka Ignatious**  
+**Makgoka Ignatious**
 GitHub: [@Makgoka-Ignatious](https://github.com/Makgoka-Ignatious)
