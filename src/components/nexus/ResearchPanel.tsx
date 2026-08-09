@@ -112,7 +112,7 @@ export function ResearchPanel() {
       <section className="panel h-fit min-w-0 p-4 sm:p-6">
         <h1 className="text-lg">Research Assistant</h1>
         <p className="mt-1 text-[13px] text-muted-foreground">
-          Paste text, drop in a link or YouTube video, or upload a PDF — the AI reads it all.
+          Paste text, drop in a link or YouTube video, or upload a PDF - the AI reads it all.
         </p>
 
         <div
@@ -156,7 +156,7 @@ export function ResearchPanel() {
               value={input}
               onChange={(event) => setInput(event.target.value)}
               rows={10}
-              placeholder="e.g. How should a 40-person team adopt async standups? — or paste an entire article here."
+              placeholder="e.g. How should a 40-person team adopt async standups? - or paste an entire article here."
               className="mt-2 w-full resize-y rounded-md border border-input bg-card px-3 py-2.5 text-[15px] leading-relaxed placeholder:text-muted-foreground/70"
             />
             <p className="mt-2 text-[12px] text-muted-foreground">
@@ -273,7 +273,7 @@ function EmptyState() {
         <p className="font-semibold">No analysis yet</p>
         <p className="mt-1 max-w-sm text-[14px] text-muted-foreground">
           Add a topic, a link or a PDF on the left, then generate. You'll get a
-          summary, key insights and recommendations — all editable.
+          summary, key insights and recommendations - all editable.
         </p>
       </div>
     </div>

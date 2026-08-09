@@ -10,7 +10,7 @@ import { EmailPanel } from "@/components/nexus/EmailPanel";
 import { TopBar } from "@/components/nexus/TopBar";
 import { SECTIONS, type SectionId } from "@/components/nexus/sections";
 
-const TITLE = "Nexus — Think. Link. Deliver.";
+const TITLE = "Nexus - Think. Link. Deliver.";
 const DESCRIPTION =
   "Nexus is an AI workplace productivity hub: chat, research from text, links or PDFs, and smart email drafting in one Urban Grid control panel. Built for Momentum.";
 

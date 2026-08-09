@@ -58,7 +58,7 @@ export function EmailPanel() {
       <section className="panel h-fit min-w-0 p-4 sm:p-6">
         <h1 className="text-lg">Smart Email Generator</h1>
         <p className="mt-1 text-[13px] text-muted-foreground">
-          Nothing is sent — this composes a draft you can copy out.
+          Nothing is sent - this composes a draft you can copy out.
         </p>
 
         <div className="mt-6 space-y-4">
@@ -82,7 +82,7 @@ export function EmailPanel() {
               id="email-recipient"
               value={recipient}
               onChange={(event) => setRecipient(event.target.value)}
-              placeholder="Dana Reid — Head of Operations"
+              placeholder="Dana Reid - Head of Operations"
               className="w-full rounded-md border border-input bg-card px-3 py-2.5 text-[15px] placeholder:text-muted-foreground/70"
             />
           </Field>

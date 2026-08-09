@@ -26,7 +26,7 @@ function apiKey() {
 }
 
 function statusError(status: number) {
-  if (status === 429) return new Error("Rate limit reached — please try again in a moment.");
+  if (status === 429) return new Error("Rate limit reached - please try again in a moment.");
   if (status === 402) return new Error("AI credits exhausted. Add credits to continue.");
   return new Error(`AI request failed (${status}).`);
 }
@@ -170,7 +170,7 @@ export const chatReply = createServerFn({ method: "POST" })
         {
           role: "system",
           content:
-            "You are Nexus, an AI workplace productivity assistant inside a hub that also offers a Research Assistant and a Smart Email Generator. Understand the user's actual input and answer it substantively and specifically — never with canned boilerplate. Be concise but complete, use short paragraphs and markdown lists where they help readability, and reference earlier turns when relevant. Only mention the other Nexus tools when they are genuinely the right next step.",
+            "You are Nexus, an AI workplace productivity assistant inside a hub that also offers a Research Assistant and a Smart Email Generator. Understand the user's actual input and answer it substantively and specifically - never with canned boilerplate. Be concise but complete, use short paragraphs and markdown lists where they help readability, and reference earlier turns when relevant. Only mention the other Nexus tools when they are genuinely the right next step.",
         },
         ...(data.messages as Msg[]),
       ],
@@ -220,7 +220,7 @@ export const analyzeResearch = createServerFn({ method: "POST" })
       parts.push({
         type: "text",
         text: `${page.kind === "youtube" ? "YouTube video" : "Web page"} (${page.url})${
-          page.title ? ` — "${page.title}"` : ""
+          page.title ? ` - "${page.title}"` : ""
         }:\n\n${page.text}`,
       });
       source = source ? `${source} + ${page.url}` : page.url;
@@ -285,8 +285,8 @@ export const draftEmail = createServerFn({ method: "POST" })
       data.recipient && `Recipient name/role: ${data.recipient}`,
       data.subject
         ? `Subject (use this exactly): ${data.subject}`
-        : "Subject: not provided — write a strong, specific one.",
-      `Tone: ${data.tone} — ${TONE_GUIDE[data.tone as EmailTone]}`,
+        : "Subject: not provided - write a strong, specific one.",
+      `Tone: ${data.tone} - ${TONE_GUIDE[data.tone as EmailTone]}`,
       `Context and key points:\n${data.context}`,
     ]
       .filter(Boolean)
@@ -297,7 +297,7 @@ export const draftEmail = createServerFn({ method: "POST" })
         {
           role: "system",
           content:
-            'You are an expert business email writer. Read the brief and write a real email that addresses its specific content — never a generic template. Address the recipient by name or role when known, otherwise use a neutral greeting. Sign off with "[Your name]". Respond ONLY with JSON of shape {"subject": string, "body": string}, where body uses \\n for line breaks. No markdown fences.',
+            'You are an expert business email writer. Read the brief and write a real email that addresses its specific content - never a generic template. Address the recipient by name or role when known, otherwise use a neutral greeting. Sign off with "[Your name]". Respond ONLY with JSON of shape {"subject": string, "body": string}, where body uses \\n for line breaks. No markdown fences.',
         },
         { role: "user", content: details },
       ],

@@ -29,7 +29,7 @@ export function DashboardHome({ onLaunch }: DashboardHomeProps) {
           BUILT FOR MOMENTUM.
         </p>
         <p className="mt-3 max-w-2xl text-[15px] text-muted-foreground">
-          Three connected tools on one grid — chat, research and email. Nothing is kept
+          Three connected tools on one grid - chat, research and email. Nothing is kept
           after you close the tab.
         </p>
         </div>
