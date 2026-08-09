@@ -213,10 +213,15 @@
 
 /* The Urban Grid foundation: 20px grid of 1px slate lines. */
 @utility grid-lines {
+  --grid-line: color-mix(in srgb, var(--foreground) 14%, transparent);
   background-image:
-    linear-gradient(to right, var(--border) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
   background-size: 20px 20px;
+}
+
+.dark .grid-lines {
+  --grid-line: color-mix(in srgb, var(--foreground) 12%, transparent);
 }
 
 /* Cursor-reactive halo: brighter grid + soft primary glow near the pointer. */
