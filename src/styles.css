@@ -219,6 +219,50 @@
   background-size: 20px 20px;
 }
 
+/* Cursor-reactive halo: brighter grid + soft primary glow near the pointer. */
+@utility grid-halo {
+  --mx: -1000px;
+  --my: -1000px;
+  background-image:
+    radial-gradient(
+      220px circle at var(--mx) var(--my),
+      color-mix(in srgb, var(--primary) 16%, transparent),
+      transparent 70%
+    ),
+    linear-gradient(to right, var(--primary) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--primary) 1px, transparent 1px);
+  background-size:
+    100% 100%,
+    20px 20px,
+    20px 20px;
+  mask-image: radial-gradient(200px circle at var(--mx) var(--my), #000 0%, transparent 72%);
+  -webkit-mask-image: radial-gradient(200px circle at var(--mx) var(--my), #000 0%, transparent 72%);
+}
+
+.grid-ripple {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-radius: 9999px;
+  border: 1px solid var(--signal);
+  transform: translate(-50%, -50%);
+  animation: grid-ripple 700ms ease-out forwards;
+}
+
+@keyframes grid-ripple {
+  from {
+    width: 0;
+    height: 0;
+    opacity: 0.6;
+  }
+  to {
+    width: 260px;
+    height: 260px;
+    opacity: 0;
+  }
+}
+
+
 /* Cards / panels */
 @utility panel {
   background-color: var(--card);
