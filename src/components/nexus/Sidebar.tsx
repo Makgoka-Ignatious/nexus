@@ -21,7 +21,7 @@ export function Sidebar({ active, onSelect, collapsed, onToggle }: DesktopSideba
       }`}
     >
       <div
-        className={`flex h-20 items-center gap-3 border-b border-sidebar-border ${
+        className={`flex h-20 items-center gap-3 ${
           collapsed ? "justify-center px-3" : "px-6"
         }`}
       >

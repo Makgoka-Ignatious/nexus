@@ -13,7 +13,7 @@ const INITIAL: ChatMessage[] = [
     id: "welcome",
     role: "assistant",
     content:
-      "Nexus online. Ask me anything — I read what you actually write, so give me as much detail as you like.",
+      "Nexus online. Ask me anything - I read what you actually write, so give me as much detail as you like.",
   },
 ];
 
@@ -77,7 +77,7 @@ export function ChatPanel() {
         },
       });
       setThinking(false);
-      typeOut(result.content || "I didn't get a response that time — try again.");
+      typeOut(result.content || "I didn't get a response that time - try again.");
     } catch (err) {
       setThinking(false);
       setError(err instanceof Error ? err.message : "Something went wrong.");
@@ -101,7 +101,7 @@ export function ChatPanel() {
         <div className="min-w-0">
           <h1 className="truncate text-lg">AI Chat</h1>
           <p className="truncate text-[13px] text-muted-foreground">
-            Live AI — it reads and reasons over whatever you send.
+            Live AI - it reads and reasons over whatever you send.
           </p>
         </div>
         <button
@@ -169,7 +169,7 @@ export function ChatPanel() {
                 void send();
               }
             }}
-            placeholder="Ask anything — Enter to send, Shift+Enter for a new line"
+            placeholder="Ask anything - Enter to send, Shift+Enter for a new line"
             className="min-h-[56px] min-w-0 flex-1 resize-none rounded-md border border-input bg-card px-3 py-2.5 text-[15px] text-foreground placeholder:text-muted-foreground/70"
           />
           <button
