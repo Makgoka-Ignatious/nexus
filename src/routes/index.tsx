@@ -36,7 +36,7 @@ function NexusApp() {
   const section = SECTIONS.find((s) => s.id === active);
 
   return (
-    <div className="min-h-screen">
+    <div className="relative isolate min-h-screen">
       <GridBackground />
       <Sidebar
         active={active}
@@ -47,7 +47,7 @@ function NexusApp() {
       <MobileTabBar active={active} onSelect={setActive} offset={bannerVisible} />
 
       <main
-        className={`px-3 pt-6 transition-[padding] duration-300 sm:px-4 sm:pt-8 md:pr-6 lg:pr-8 ${collapsed ? "md:pl-[96px]" : "md:pl-[284px]"} ${bannerVisible ? "pb-36 md:pb-20" : "pb-32 md:pb-12"}`}
+        className={`relative z-10 px-3 pt-6 transition-[padding] duration-300 sm:px-4 sm:pt-8 md:pr-6 lg:pr-8 ${collapsed ? "md:pl-[96px]" : "md:pl-[284px]"} ${bannerVisible ? "pb-36 md:pb-20" : "pb-32 md:pb-12"}`}
       >
         <div className="mx-auto w-full max-w-[1400px]">
           <TopBar sectionLabel={section?.label ?? "Dashboard"} />
