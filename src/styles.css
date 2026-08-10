@@ -131,7 +131,7 @@
 @keyframes grid-breathe {
   0%,
   100% {
-    opacity: 0.5;
+    opacity: 0.85;
   }
   50% {
     opacity: 1;
@@ -213,7 +213,7 @@
 
 /* The Urban Grid foundation: 20px grid of 1px slate lines. */
 @utility grid-lines {
-  --grid-line: color-mix(in srgb, var(--foreground) 14%, transparent);
+  --grid-line: color-mix(in srgb, var(--foreground) 32%, transparent);
   background-image:
     linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
     linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
@@ -221,7 +221,7 @@
 }
 
 .dark .grid-lines {
-  --grid-line: color-mix(in srgb, var(--foreground) 12%, transparent);
+  --grid-line: color-mix(in srgb, var(--foreground) 22%, transparent);
 }
 
 /* Cursor-reactive halo: brighter grid + soft primary glow near the pointer. */
