@@ -52,7 +52,6 @@
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
   --animate-section-in: section-in 300ms ease-out both;
-  --animate-section-in: section-in 300ms ease-out both;
   --animate-caret: caret 900ms steps(1) infinite;
   --animate-dash-spin: dash-spin 900ms linear infinite;
   --animate-grid-pulse: grid-pulse 1.4s ease-in-out infinite;
