@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { GridBackground } from "@/components/nexus/GridBackground";
+import { NetworkBackground } from "@/components/nexus/NetworkBackground";
 import { Sidebar, MobileTabBar } from "@/components/nexus/Sidebar";
 import { DisclaimerBanner } from "@/components/nexus/DisclaimerBanner";
 import { DashboardHome } from "@/components/nexus/DashboardHome";
@@ -37,7 +37,7 @@ function NexusApp() {
 
   return (
     <div className="relative isolate min-h-screen">
-      <GridBackground />
+      <NetworkBackground />
       <Sidebar
         active={active}
         onSelect={setActive}
