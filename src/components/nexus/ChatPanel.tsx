@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { SendHorizonal, Trash2, Bot, User, AlertTriangle } from "lucide-react";
+import { SendHorizonal, Trash2, Network, User, AlertTriangle } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { SUGGESTED_PROMPTS, type ChatMessage } from "@/lib/nexus/mock-chat";
 import { chatReply } from "@/lib/nexus/ai.functions";
@@ -209,7 +209,7 @@ function Bubble({
             : "border-border bg-accent text-primary"
         }`}
       >
-        {isUser ? <User className="size-4" /> : <Bot className="size-4" />}
+        {isUser ? <User className="size-4" /> : <Network className="size-4" />}
       </span>
       <div
         aria-live={caret ? "polite" : undefined}
