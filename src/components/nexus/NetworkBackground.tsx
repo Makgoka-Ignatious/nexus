@@ -141,24 +141,28 @@ export function NetworkBackground() {
       pointer.x = -9999;
       pointer.y = -9999;
     };
-    const onDown = (e: PointerEvent) => {
+    const addPulse = (x: number, y: number) => {
       if (reduced) return;
-      pulses.push({ x: e.clientX, y: e.clientY, r: 0 });
-      if (pulses.length > 4) pulses.shift();
+      pulses.push({ x, y, r: 0 });
+      if (pulses.length > 6) pulses.shift();
     };
+    const onDown = (e: PointerEvent) => addPulse(e.clientX, e.clientY);
+    const onClick = (e: MouseEvent) => addPulse(e.clientX, e.clientY);
 
     build();
     raf = requestAnimationFrame(draw);
     window.addEventListener("resize", build);
     window.addEventListener("pointermove", onMove, { passive: true });
-    window.addEventListener("pointerdown", onDown, { passive: true });
+    window.addEventListener("pointerdown", onDown, { capture: true, passive: true });
+    window.addEventListener("mousedown", onClick, { capture: true, passive: true });
     document.addEventListener("pointerleave", onLeave);
 
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", build);
       window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("pointerdown", onDown);
+      window.removeEventListener("pointerdown", onDown, { capture: true });
+      window.removeEventListener("mousedown", onClick, { capture: true });
       document.removeEventListener("pointerleave", onLeave);
     };
   }, []);
