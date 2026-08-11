@@ -1,4 +1,4 @@
-import { Activity, Moon, Sun, Cpu } from "lucide-react";
+import { Waypoints, Moon, Sun, BrainCircuit } from "lucide-react";
 import { useAiCallCount } from "@/lib/nexus/ai-counter";
 import { useTheme, toggleTheme } from "@/lib/nexus/theme";
 import { MODELS, useModel, setModel } from "@/lib/nexus/models";
