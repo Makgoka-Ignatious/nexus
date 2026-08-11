@@ -141,8 +141,12 @@ export function NetworkBackground() {
       pointer.x = -9999;
       pointer.y = -9999;
     };
+    let lastPulseAt = 0;
     const addPulse = (x: number, y: number) => {
       if (reduced) return;
+      const now = performance.now();
+      if (now - lastPulseAt < 120) return;
+      lastPulseAt = now;
       pulses.push({ x, y, r: 0 });
       if (pulses.length > 6) pulses.shift();
     };
