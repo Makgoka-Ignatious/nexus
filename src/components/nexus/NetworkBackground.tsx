@@ -106,8 +106,8 @@ export function NetworkBackground() {
           continue;
         }
         ctx.strokeStyle = signal;
-        ctx.globalAlpha = Math.max(0, 0.35 * (1 - p.r / 520));
-        ctx.lineWidth = 1.5;
+        ctx.globalAlpha = Math.max(0, 0.6 * (1 - p.r / 640));
+        ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.stroke();
