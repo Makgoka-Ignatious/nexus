@@ -22,7 +22,7 @@ export function TopBar({ sectionLabel }: { sectionLabel: string }) {
       <div className="flex shrink-0 items-center gap-2">
         <label className="relative inline-flex items-center">
           <span className="sr-only">AI model</span>
-          <Cpu
+          <BrainCircuit
             className="pointer-events-none absolute left-2.5 size-3.5 text-signal"
             aria-hidden="true"
           />
@@ -45,7 +45,7 @@ export function TopBar({ sectionLabel }: { sectionLabel: string }) {
           title="AI requests made this session"
           className="inline-flex h-9 shrink-0 items-center gap-2 rounded-md border border-border bg-card px-2.5 text-[12px] font-medium text-muted-foreground"
         >
-          <Activity className="size-3.5 shrink-0 text-signal" aria-hidden="true" />
+          <Waypoints className="size-3.5 shrink-0 text-signal" aria-hidden="true" />
           <span className="whitespace-nowrap">
             <span className="hidden sm:inline">AI Requests: </span>
             <span className="sm:hidden">AI: </span>
