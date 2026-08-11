@@ -1,4 +1,4 @@
-import { Waypoints, Moon, Sun, BrainCircuit } from "lucide-react";
+import { Waypoints, Moon, Sun, Cpu } from "lucide-react";
 import { useAiCallCount } from "@/lib/nexus/ai-counter";
 import { useTheme, toggleTheme } from "@/lib/nexus/theme";
 import { MODELS, useModel, setModel } from "@/lib/nexus/models";
@@ -22,7 +22,7 @@ export function TopBar({ sectionLabel }: { sectionLabel: string }) {
       <div className="flex shrink-0 items-center gap-2">
         <label className="relative inline-flex items-center">
           <span className="sr-only">AI model</span>
-          <BrainCircuit
+          <Cpu
             className="pointer-events-none absolute left-2.5 size-3.5 text-signal"
             aria-hidden="true"
           />
