@@ -155,7 +155,7 @@ async function fetchPageText(url: URL): Promise<SourceText> {
 
   const contentType = response.headers.get("content-type") ?? "";
   if (contentType.includes("application/pdf"))
-    throw new Error("That link is a PDF — download it and upload the file instead.");
+    throw new Error("That link is a PDF - download it and upload the file instead.");
 
   if (!response.ok) {
     const readable = await readViaReader(url.toString());
@@ -178,7 +178,7 @@ async function fetchPageText(url: URL): Promise<SourceText> {
 
   if (text.length < 120)
     throw new Error(
-      "Couldn't extract readable content from that page — it may be JavaScript-only. Paste the text instead.",
+      "Couldn't extract readable content from that page - it may be JavaScript-only. Paste the text instead.",
     );
 
   return { url: url.toString(), title, text, kind: "page" };
