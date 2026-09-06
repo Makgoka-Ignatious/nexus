@@ -21,7 +21,7 @@ function points(context: string): string[] {
     .slice(0, 5);
 }
 
-/** Suggests a subject line from the context — editable by the user afterwards. */
+/** Suggests a subject line from the context - editable by the user afterwards. */
 export function suggestSubject(context: string, tone: EmailTone): string {
   const [first = ""] = points(context);
   const core = first
@@ -33,7 +33,7 @@ export function suggestSubject(context: string, tone: EmailTone): string {
   if (!core) return "";
   const capped = core.charAt(0).toUpperCase() + core.slice(1);
   if (tone === "friendly") return `Quick one: ${capped.toLowerCase()}`;
-  if (tone === "persuasive") return `${capped} — and what it unlocks`;
+  if (tone === "persuasive") return `${capped} - and what it unlocks`;
   return `Regarding: ${capped}`;
 }
 
@@ -56,7 +56,7 @@ export function generateEmail(args: {
       ``,
       rest.length
         ? `Here's where things stand:\n\n${rest.map((p) => `• ${sentence(p)}`).join("\n")}`
-        : `Nothing complicated on my side — just wanted to make sure it was on your radar.`,
+        : `Nothing complicated on my side - just wanted to make sure it was on your radar.`,
       ``,
       `No rush at all, but if you can take a look this week that'd be great. Happy to jump on a quick call if it's easier than email.`,
       ``,
@@ -77,7 +77,7 @@ export function generateEmail(args: {
         ? `Three things worth your attention:\n\n${rest
             .map((p, i) => `${i + 1}. ${sentence(p)}`)
             .join("\n")}`
-        : `The case is straightforward — the cost of waiting is higher than the cost of acting, and the work needed to start is small.`,
+        : `The case is straightforward - the cost of waiting is higher than the cost of acting, and the work needed to start is small.`,
       ``,
       `Every cycle we wait, the effort to catch up grows and the options narrow. Acting this month keeps the decision cheap and reversible.`,
       ``,

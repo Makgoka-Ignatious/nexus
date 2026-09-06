@@ -97,14 +97,22 @@ export function NetworkBackground() {
         }
       }
 
-      // pulses
+      // pulses: expanding signal ring that lights up nodes as it passes
+      const maxR = Math.max(width, height);
       for (let i = pulses.length - 1; i >= 0; i--) {
         const p = pulses[i]!;
         p.r += 7;
-        if (p.r > Math.max(width, height)) {
+        if (p.r > maxR) {
           pulses.splice(i, 1);
           continue;
         }
+        const t = p.r / maxR;
+        ctx.strokeStyle = signal;
+        ctx.globalAlpha = Math.max(0, 0.6 * (1 - t));
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.stroke();
       }
 
       // nodes
