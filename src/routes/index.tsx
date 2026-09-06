@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { NetworkBackground } from "@/components/nexus/NetworkBackground";
-import { ClickPulse } from "@/components/nexus/ClickPulse";
+
 import { Sidebar, MobileTabBar } from "@/components/nexus/Sidebar";
 import { DisclaimerBanner } from "@/components/nexus/DisclaimerBanner";
 import { DashboardHome } from "@/components/nexus/DashboardHome";
@@ -39,7 +39,6 @@ function NexusApp() {
   return (
     <div className="relative isolate min-h-screen">
       <NetworkBackground />
-      <ClickPulse />
       <Sidebar
         active={active}
         onSelect={setActive}
