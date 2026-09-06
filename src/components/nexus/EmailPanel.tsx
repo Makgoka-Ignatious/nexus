@@ -58,7 +58,7 @@ export function EmailPanel() {
       <section className="panel h-fit min-w-0 p-4 sm:p-6">
         <h1 className="text-lg">Smart Email Generator</h1>
         <p className="mt-1 text-[13px] text-muted-foreground">
-          Nothing is sent - this composes a draft you can copy out.
+          Nothing is sent, this composes a draft you can copy out.
         </p>
 
         <div className="mt-6 space-y-4">
@@ -193,7 +193,7 @@ export function EmailPanel() {
 
             <p className="flex items-start gap-2 text-[12px] text-muted-foreground">
               <Info className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
-              This is AI-generated and should be reviewed before sending.
+              This is AI generated and should be reviewed before sending.
             </p>
 
             <div className="flex flex-wrap gap-2">

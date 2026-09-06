@@ -9,7 +9,7 @@ interface DashboardHomeProps {
 
 const STATS = [
   { icon: Layers, value: "3 tools", label: "available in this hub" },
-  { icon: ShieldCheck, value: "100%", label: "session-only & private by design" },
+  { icon: ShieldCheck, value: "100%", label: "session only & private by design" },
   { icon: Wifi, value: "0", label: "records stored after you leave" },
 ];
 
@@ -29,7 +29,7 @@ export function DashboardHome({ onLaunch }: DashboardHomeProps) {
           BUILT FOR MOMENTUM.
         </p>
         <p className="mt-3 max-w-2xl text-[15px] text-muted-foreground">
-          Three connected tools on one grid - chat, research and email. Nothing is kept
+          Three connected tools on one grid: chat, research and email. Nothing is kept
           after you close the tab.
         </p>
         </div>

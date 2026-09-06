@@ -33,6 +33,6 @@ export const SECTIONS: SectionDef[] = [
     id: "email",
     label: "Email",
     icon: Mail,
-    description: "Draft tone-controlled messages from a few key points.",
+    description: "Draft tone controlled messages from a few key points.",
   },
 ];

@@ -112,7 +112,7 @@ export function ResearchPanel() {
       <section className="panel h-fit min-w-0 p-4 sm:p-6">
         <h1 className="text-lg">Research Assistant</h1>
         <p className="mt-1 text-[13px] text-muted-foreground">
-          Paste text, drop in a link or YouTube video, or upload a PDF - the AI reads it all.
+          Paste text, drop in a link or YouTube video, or upload a PDF: the AI reads it all.
         </p>
 
         <div
@@ -273,7 +273,7 @@ function EmptyState() {
         <p className="font-semibold">No analysis yet</p>
         <p className="mt-1 max-w-sm text-[14px] text-muted-foreground">
           Add a topic, a link or a PDF on the left, then generate. You'll get a
-          summary, key insights and recommendations - all editable.
+          summary, key insights and recommendations, all editable.
         </p>
       </div>
     </div>
