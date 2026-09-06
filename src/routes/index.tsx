@@ -39,7 +39,6 @@ function NexusApp() {
   return (
     <div className="relative isolate min-h-screen">
       <NetworkBackground />
-      <ClickPulse />
       <Sidebar
         active={active}
         onSelect={setActive}
