@@ -10,7 +10,7 @@ export function DisclaimerBanner({ onDismiss }: DisclaimerBannerProps) {
       <div className="mx-auto flex h-full max-w-[1400px] items-center gap-3 px-4">
         <AlertTriangle className="size-4 shrink-0 text-signal" aria-hidden="true" />
         <p className="truncate text-[13px] text-muted-foreground">
-          AI-generated content. Verify before use. Nexus does not store your data.
+          AI generated content. Verify before use. Nexus does not store your data.
         </p>
         <button
           type="button"
