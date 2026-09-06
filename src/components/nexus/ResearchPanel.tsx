@@ -156,7 +156,7 @@ export function ResearchPanel() {
               value={input}
               onChange={(event) => setInput(event.target.value)}
               rows={10}
-              placeholder="e.g. How should a 40-person team adopt async standups? - or paste an entire article here."
+              placeholder="e.g. How should a 40-person team adopt async standups? Or paste an entire article here."
               className="mt-2 w-full resize-y rounded-md border border-input bg-card px-3 py-2.5 text-[15px] leading-relaxed placeholder:text-muted-foreground/70"
             />
             <p className="mt-2 text-[12px] text-muted-foreground">
